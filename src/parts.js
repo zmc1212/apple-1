@@ -251,7 +251,7 @@
   function update(now) {
     if (!flying) return;
     list.forEach(function (p) {
-      if (!p.begun) return;
+      if (!p.begun || p.sealed) return;
       if (!phaseOut) {
         var t = (now - t0 - p.delay * 0.62) / p.duration;
         if (t <= 0) return;
@@ -302,6 +302,7 @@
   function sealAll() {
     flying = true; phaseOut = false;
     list.forEach(function (p) {
+      p.sealed = true;
       p.begun = true; p.landed = true; p.tagShown = true;
       p.group.visible = true;
       p.group.position.copy(p.target);
@@ -314,7 +315,7 @@
   function reset() {
     flying = false; phaseOut = false; seatedCount = 0;
     list.forEach(function (p) {
-      p.begun = false; p.landed = false;
+      p.begun = false; p.landed = false; p.sealed = false;
       p.group.visible = false;
       if (p.line) { LS8.Scene3D.scene.remove(p.line); p.line = null; }
       if (p.outLine) { LS8.Scene3D.scene.remove(p.outLine); p.outLine = null; }
