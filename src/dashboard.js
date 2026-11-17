@@ -29,11 +29,11 @@
       '<div class="iq-chips" style="margin-top:auto"><span class="chip" id="ch-wm">WOZMON</span><span class="chip" id="ch-basic">BASIC</span><span class="chip" id="ch-run">RUN</span></div>' +
       '</div></div></section>' +
 
-      '<section class="panel"><header><i class="dot" style="background:#5b8cff"></i><b>RAM 4K</b><span class="meta">8 ROWS x 4096 BIT</span></header>' +
+      '<section class="panel"><header><i class="dot" style="background:#5b8cff"></i><b>RAM 4K</b><span class="meta">8 × MK4096 · 2 ROWS</span></header>' +
       '<div class="body"><div id="ram-grid"></div>' +
       '<div class="axis"><span id="ram-note">EMPTY SOCKETS</span><span id="ram-test">—</span></div></div></section>' +
 
-      '<section class="panel"><header><i class="dot" style="background:#e8c53c"></i><b>CASSETTE</b><span class="meta">BASIC 8K · 300 BAUD</span></header>' +
+      '<section class="panel"><header><i class="dot" style="background:#e8c53c"></i><b>CASSETTE</b><span class="meta">BASIC 4K · 1500 BAUD</span></header>' +
       '<div class="body"><canvas id="c-tape"></canvas>' +
       '<div class="axis"><span id="tape-note">STANDBY</span><span id="tape-pct">0%</span></div></div></section>';
 
@@ -88,13 +88,10 @@
     crtLines.forEach(function (ln, i) {
       ctx.fillText(ln, 8, 16 + i * 13);
     });
-    // 光标闪烁
+    // 光标闪烁（Woz Monitor 为 @ 光标）
     if (Math.sin(st.time * 6) > 0 && crtCursor) {
       var y = 16 + Math.min(crtLines.length, 6) * 13 - 3;
-      ctx.fillText(crtCursor + "█", 8, y);
-    } else if (crtCursor) {
-      var y2 = 16 + Math.min(crtLines.length, 6) * 13 - 3;
-      ctx.fillText(crtCursor, 8, y2);
+      ctx.fillText(crtCursor, 8, y);
     }
     ctx.shadowBlur = 0;
     // 扫描线
@@ -149,7 +146,7 @@
     var sweep = st.crtOn ? String((Math.floor(st.time * 40) % 0x4000)).padStart(4, "0") : "—";
     dom.ramTest.textContent = "$" + sweep;
 
-    dom.tapeNote.textContent = st.tapeProgress >= 1 ? "BASIC LOADED · CRUN" : (st.tapePlaying ? "READING · 300 BAUD" : "STANDBY");
+    dom.tapeNote.textContent = st.tapeProgress >= 1 ? "BASIC LOADED · CRUN" : (st.tapePlaying ? "READING · 1500 BAUD" : "STANDBY");
     dom.tapePct.textContent = Math.round(st.tapeProgress * 100) + "%";
   }
 

@@ -1,4 +1,4 @@
-/* 场景：渲染器 / 灯光 / 木桌 / 深蓝垫 / Apple I 奶色主板 */
+/* 场景：渲染器 / 灯光 / 木桌 / 深蓝垫 / Apple I 裸 FR-4 主板（无丝印） */
 (function (LS8) {
   var M = {};
 
@@ -87,28 +87,31 @@
     M.chip = new THREE.MeshStandardMaterial({ color: 0x111318, roughness: 0.4, metalness: 0.2 });
     M.cream = new THREE.MeshStandardMaterial({
       map: LS8.Textures.makeTex(512, 384, function (ctx, w, h) {
-        ctx.fillStyle = "#e6ddc2";
+        /* 裸 FR-4（无阻焊无丝印，真实 Apple I 即是如此）：棕褐底 + 正交铜箔走线 */
+        ctx.fillStyle = "#cdb98c";
         ctx.fillRect(0, 0, w, h);
-        ctx.strokeStyle = "rgba(110,80,40,0.4)";
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = "rgba(96, 70, 38, 0.5)";
+        ctx.lineWidth = 2.4;
+        ctx.lineCap = "round";
         var seed = 11;
         function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
-        for (var i = 0; i < 24; i++) {
+        for (var i = 0; i < 26; i++) {
           ctx.beginPath();
           var x = rnd() * w, y = rnd() * h;
           ctx.moveTo(x, y);
-          for (var s = 0; s < 4; s++) {
-            if (rnd() > 0.5) x += (rnd() - 0.5) * 140; else y += (rnd() - 0.5) * 100;
+          for (var s = 0; s < 3; s++) {
+            /* 严格曼哈顿长走线 */
+            if (s % 2 === 0) x += (rnd() > 0.5 ? 1 : -1) * (60 + rnd() * 150);
+            else y += (rnd() > 0.5 ? 1 : -1) * (40 + rnd() * 110);
             ctx.lineTo(x, y);
           }
           ctx.stroke();
         }
-        ctx.fillStyle = "rgba(60,45,20,0.85)";
-        ctx.font = "bold 30px monospace";
-        ctx.fillText("Apple Computer 1", 24, 46);
-        ctx.font = "14px monospace";
-        ctx.fillText("PALO ALTO · COPYRIGHT © 1976", 24, 70);
-        ctx.fillText("MOS 6502 · 4K RAM · 44 PIN EDGE", 24, 90);
+        /* 镀锡焊点 */
+        for (var d = 0; d < 90; d++) {
+          ctx.fillStyle = "rgba(226, 216, 196, 0.75)";
+          ctx.beginPath(); ctx.arc(rnd() * w, rnd() * h, 2.2, 0, Math.PI * 2); ctx.fill();
+        }
       }, { repeat: [1, 1] }),
       roughness: 0.65
     });
@@ -122,10 +125,10 @@
     var pcbBase = mesh(new THREE.BoxGeometry(2.45, 0.04, 1.58), M.cream, 0, 0.02, 0);
     g.add(pcbBase);
 
-    // RAM 插座阵列：8 行 × 3 座（右侧区域）
-    for (var r = 0; r < 8; r++) {
-      for (var c = 0; c < 3; c++) {
-        g.add(mesh(new THREE.BoxGeometry(0.17, 0.02, 0.07), M.dark, 0.42 + c * 0.21, 0.05, -0.6 + r * 0.155));
+    // RAM 插座阵列：2 排 × 8 座（真实布局：一排插 8 颗 MK4096，一排留作扩展）
+    for (var r = 0; r < 2; r++) {
+      for (var c = 0; c < 8; c++) {
+        g.add(mesh(new THREE.BoxGeometry(0.17, 0.02, 0.07), M.dark, -0.85 + c * 0.225, 0.05, 0.3 + r * 0.25));
       }
     }
     // 零散小件

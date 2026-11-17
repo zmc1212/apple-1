@@ -3,8 +3,8 @@
   var phases = [
     { id: "core", name: "CORE · 6502", dur: 5.2, dot: "pink",
       cam: { theta: -0.62, phi: 0.96, r: 6.0, target: [0.05, 0.2, 0.1] }, drift: 0.04 },
-    { id: "ram", name: "RAM · 4 x 4K", dur: 4.4, dot: "blue",
-      cam: { theta: -1.4, phi: 0.95, r: 3.6, target: [0.75, 0.15, -0.05] }, drift: 0.015 },
+    { id: "ram", name: "RAM · 8 x 4KBIT", dur: 4.4, dot: "blue",
+      cam: { theta: -1.4, phi: 0.95, r: 3.6, target: [0.05, 0.15, 0.42] }, drift: 0.015 },
     { id: "video", name: "VIDEO · RF BOX", dur: 3.4, dot: "teal",
       cam: { theta: -2.3, phi: 0.95, r: 3.6, target: [1.0, 0.15, -0.25] }, drift: 0.012 },
     { id: "pwr", name: "POWER · 7805", dur: 3.4, dot: "green",
@@ -22,8 +22,8 @@
   var PINNED = {
     ram: function () {
       return [
-        { id: "p-r1", obj: LS8.Parts.group("ram1"), text: "4096 · 4K BIT" },
-        { id: "p-r4", obj: LS8.Parts.group("ram4"), text: "ROW 4", tone: "white" }
+        { id: "p-r1", obj: LS8.Parts.group("ram1"), text: "MK4096 · 4KBIT" },
+        { id: "p-r8", obj: LS8.Parts.group("ram8"), text: "8 × 4KBIT = 4KB", tone: "white" }
       ];
     },
     video: function () {
@@ -75,22 +75,22 @@
     idx = i; pt = 0;
     var ph = phases[i];
     if (ph.id === "core") {
-      LS8.Parts.begin(0, ["cpu", "chargen", "tray"]);
+      LS8.Parts.begin(0, ["cpu", "chargen", "prom", "tray"]);
       LS8.Labels.clearAnnounce();
     } else if (ph.id === "ram") {
-      LS8.Parts.begin(0, ["ram1", "ram2", "ram3", "ram4", "xtal1", "xtal2"]);
+      LS8.Parts.begin(0, ["ram1", "ram2", "ram3", "ram4", "ram5", "ram6", "ram7", "ram8", "xtal1"]);
     } else if (ph.id === "video") {
       LS8.Parts.begin(0, ["rfmod"]);
     } else if (ph.id === "pwr") {
       LS8.Parts.begin(0, ["reg", "to3", "caps", "res"]);
     } else if (ph.id === "io") {
-      LS8.Parts.begin(0, ["jacks", "kbd"]);
+      LS8.Parts.begin(0, ["jacks", "kbd", "pia"]);
       LS8.Cables.begin(0);
     } else if (ph.id === "power") {
       state.power = true;
     } else if (ph.id === "woz") {
       state.crtOn = true;
-      LS8.Dashboard.crtType("*E000R", "*");
+      LS8.Dashboard.crtType("E000R", "\\");
     } else if (ph.id === "basic") {
       state.basicOn = true;
     }
@@ -109,7 +109,7 @@
 
   /* CRT 脚本（打字节奏） */
   var CRT_SCRIPT = [
-    [0.8, "\E000R"],
+    [0.8, "E000R"],
     [2.2, "APPLE 1 BASIC V1.1"],
     [2.9, ">"],
     [3.6, "10 PRINT \"HELLO, WORLD!\""],
@@ -138,13 +138,13 @@
 
     LS8.Parts.update(pt);
     LS8.Cables.update(pt);
-    state.ramSeated = Math.min(8, LS8.Parts.seatedCount - 3 < 0 ? 0 : LS8.Parts.seatedCount - 3);
+    state.ramSeated = Math.min(8, LS8.Parts.seatedCount - 4 < 0 ? 0 : LS8.Parts.seatedCount - 4);
 
     /* CRT 打字脚本（woz 阶段及之后持续推进） */
     if (state.crtOn) {
       var t = state.crtScriptT = (state.crtScriptT || 0) + dt;
       while (typed < CRT_SCRIPT.length && t > CRT_SCRIPT[typed][0]) {
-        LS8.Dashboard.crtType(CRT_SCRIPT[typed][1], typed >= 2 ? ">" : "*");
+        LS8.Dashboard.crtType(CRT_SCRIPT[typed][1], typed >= 2 ? ">" : "\\");
         typed++;
       }
       if (typed >= 5) state.basicOn = true;
@@ -171,9 +171,9 @@
     dom.clk.textContent = state.power ? "1.023 MHZ" : "—";
     dom.bus.textContent = state.crtOn ? ("$" + state.regs.pc.toString(16).toUpperCase().padStart(4, "0")) : "----";
     var partsN = LS8.Parts.seatedCount;
-    dom.parts.textContent = partsN + " / 16";
+    dom.parts.textContent = partsN + " / 22";
     var label = ph.name;
-    if (ph.id === "core" || ph.id === "ram") label = ph.name + " · " + partsN + " / 16";
+    if (ph.id === "core" || ph.id === "ram") label = ph.name + " · " + partsN + " / 22";
     dom.pill.textContent = label;
     dom.dot.className = ph.dot;
 
@@ -203,7 +203,7 @@
         state.tapeProgress = 1;
         var t = i >= 7 ? 9.5 : 2.0;
         while (typed < CRT_SCRIPT.length && t > CRT_SCRIPT[typed][0]) {
-          LS8.Dashboard.crtType(CRT_SCRIPT[typed][1], typed >= 2 ? ">" : "*");
+          LS8.Dashboard.crtType(CRT_SCRIPT[typed][1], typed >= 2 ? ">" : "\\");
           typed++;
         }
         if (typed >= 5) state.basicOn = true;
