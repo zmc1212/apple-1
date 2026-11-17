@@ -66,6 +66,7 @@
 
   function crtType(line, prompt) {
     crtLines.push(line);
+    if (LS8.Audio) LS8.Audio.play("type");
     if (crtLines.length > 6) crtLines.shift();
     crtCursor = prompt || "";
   }
