@@ -37,14 +37,14 @@
       '<div class="body"><canvas id="c-tape"></canvas>' +
       '<div class="axis"><span id="tape-note">STANDBY</span><span id="tape-pct">0%</span></div></div></section>';
 
-    // RAM 插座网格：8 行 × 3 座
+    // RAM 插座网格：2 排 × 8 座（第 1 排插 8 颗 MK4096，第 2 排留作扩展）
     var grid = document.getElementById("ram-grid");
-    for (var r = 0; r < 8; r++) {
+    ["ROW 1 · 8 CHIPS", "ROW 2 · EXPANSION"].forEach(function (name, r) {
       var row = document.createElement("div");
       row.className = "rail-row";
-      row.innerHTML = '<span class="name">ROW ' + (r + 1) + '</span><span class="bar"><i id="ram-' + r + '"></i></span><span class="val" id="ramv-' + r + '">0/3</span>';
+      row.innerHTML = '<span class="name">' + name + '</span><span class="bar"><i id="ram-' + r + '"></i></span><span class="val" id="ramv-' + r + '">0/8</span>';
       grid.appendChild(row);
-    }
+    });
 
     var c = mkCanvas("c-crt", 92); ctxCrt = c.ctx; cw = c.w; ch = c.h;
     var t = mkCanvas("c-tape", 62); ctxTape = t.ctx; tw = t.w; th = t.h;
@@ -53,8 +53,8 @@
       pc: document.getElementById("cpu-pc"), a: document.getElementById("cpu-a"),
       x: document.getElementById("cpu-x"), y: document.getElementById("cpu-y"),
       wm: document.getElementById("ch-wm"), basic: document.getElementById("ch-basic"), run: document.getElementById("ch-run"),
-      ramRows: [0, 1, 2, 3, 4, 5, 6, 7].map(function (i) { return document.getElementById("ram-" + i); }),
-      ramVals: [0, 1, 2, 3, 4, 5, 6, 7].map(function (i) { return document.getElementById("ramv-" + i); }),
+      ramRows: [0, 1].map(function (i) { return document.getElementById("ram-" + i); }),
+      ramVals: [0, 1].map(function (i) { return document.getElementById("ramv-" + i); }),
       ramNote: document.getElementById("ram-note"), ramTest: document.getElementById("ram-test"),
       tapeNote: document.getElementById("tape-note"), tapePct: document.getElementById("tape-pct")
     };
@@ -135,14 +135,14 @@
     dom.basic.className = "chip" + (st.basicOn ? " on" : "");
     dom.run.className = "chip" + (st.runChip ? " lock" : "");
 
-    var filled = st.ramSeated;   // 已插 RAM 行数
-    for (var r = 0; r < 8; r++) {
-      var n = r < filled ? 3 : 0;
-      dom.ramRows[r].style.width = (n / 3 * 100) + "%";
-      dom.ramRows[r].style.background = n ? "#5b8cff" : "transparent";
-      dom.ramVals[r].textContent = n + "/3";
+    var filled = Math.min(8, st.ramSeated);   // 第 1 排已插芯片数（0-8）
+    var counts = [filled, 0];                  // 第 2 排为空扩展座
+    for (var r = 0; r < 2; r++) {
+      dom.ramRows[r].style.width = (counts[r] / 8 * 100) + "%";
+      dom.ramRows[r].style.background = counts[r] ? "#5b8cff" : "transparent";
+      dom.ramVals[r].textContent = counts[r] + "/8";
     }
-    dom.ramNote.textContent = st.crtOn ? "MEM TEST · " + (filled * 1024) + " B OK" : "EMPTY SOCKETS";
+    dom.ramNote.textContent = st.crtOn ? "MEM TEST · " + (filled * 512) + " B OK" : "EMPTY SOCKETS";
     var sweep = st.crtOn ? String((Math.floor(st.time * 40) % 0x4000)).padStart(4, "0") : "—";
     dom.ramTest.textContent = "$" + sweep;
 
