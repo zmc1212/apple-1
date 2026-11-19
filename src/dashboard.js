@@ -17,29 +17,29 @@
 
   function buildDOM() {
     document.getElementById("dash").innerHTML =
-      '<section class="panel"><header><i class="dot" style="background:#3ddc6f"></i><b>CRT · NTSC</b><span class="meta">40 x 24 · MONITOR</span></header>' +
+      '<section class="panel"><header><i class="dot" style="background:#3ddc6f"></i><b>CRT 文字屏</b><span class="meta">40 x 24 · MONITOR · NTSC</span></header>' +
       '<div class="body"><canvas id="c-crt"></canvas></div></section>' +
 
-      '<section class="panel"><header><i class="dot pink" style="background:#e84f8e"></i><b>MOS 6502</b><span class="meta">1.023 MHZ</span></header>' +
+      '<section class="panel"><header><i class="dot pink" style="background:#e84f8e"></i><b>6502 寄存器</b><span class="meta">MOS 6502 · 1.023 MHZ</span></header>' +
       '<div class="body"><div class="iq-stats" style="height:80px">' +
       '<div class="r"><span>PC</span><b id="cpu-pc">E000</b></div>' +
       '<div class="r"><span>A</span><b id="cpu-a">00</b></div>' +
       '<div class="r"><span>X</span><b id="cpu-x">00</b></div>' +
       '<div class="r"><span>Y</span><b id="cpu-y">00</b></div>' +
-      '<div class="iq-chips" style="margin-top:auto"><span class="chip" id="ch-wm">WOZMON</span><span class="chip" id="ch-basic">BASIC</span><span class="chip" id="ch-run">RUN</span></div>' +
+      '<div class="iq-chips" style="margin-top:auto"><span class="chip" id="ch-wm">WOZMON</span><span class="chip" id="ch-basic">BASIC</span><span class="chip" id="ch-run">运行 RUN</span></div>' +
       '</div></div></section>' +
 
-      '<section class="panel"><header><i class="dot" style="background:#5b8cff"></i><b>RAM 4K</b><span class="meta">8 × MK4096 · 2 ROWS</span></header>' +
+      '<section class="panel"><header><i class="dot" style="background:#5b8cff"></i><b>内存 RAM</b><span class="meta">4K · 8 × MK4096 · 2 ROWS</span></header>' +
       '<div class="body"><div id="ram-grid"></div>' +
-      '<div class="axis"><span id="ram-note">EMPTY SOCKETS</span><span id="ram-test">—</span></div></div></section>' +
+      '<div class="axis"><span id="ram-note">插座空置</span><span id="ram-test">—</span></div></div></section>' +
 
-      '<section class="panel"><header><i class="dot" style="background:#e8c53c"></i><b>CASSETTE</b><span class="meta">BASIC 4K · 1500 BAUD</span></header>' +
+      '<section class="panel"><header><i class="dot" style="background:#e8c53c"></i><b>磁带机</b><span class="meta">CASSETTE · BASIC 4K · 1500 BAUD</span></header>' +
       '<div class="body"><canvas id="c-tape"></canvas>' +
-      '<div class="axis"><span id="tape-note">STANDBY</span><span id="tape-pct">0%</span></div></div></section>';
+      '<div class="axis"><span id="tape-note">待机</span><span id="tape-pct">0%</span></div></div></section>';
 
     // RAM 插座网格：2 排 × 8 座（第 1 排插 8 颗 MK4096，第 2 排留作扩展）
     var grid = document.getElementById("ram-grid");
-    ["ROW 1 · 8 CHIPS", "ROW 2 · EXPANSION"].forEach(function (name, r) {
+    ["第 1 排", "扩展排"].forEach(function (name, r) {
       var row = document.createElement("div");
       row.className = "rail-row";
       row.innerHTML = '<span class="name">' + name + '</span><span class="bar"><i id="ram-' + r + '"></i></span><span class="val" id="ramv-' + r + '">0/8</span>';
@@ -142,11 +142,11 @@
       dom.ramRows[r].style.background = counts[r] ? "#5b8cff" : "transparent";
       dom.ramVals[r].textContent = counts[r] + "/8";
     }
-    dom.ramNote.textContent = st.crtOn ? "MEM TEST · " + (filled * 512) + " B OK" : "EMPTY SOCKETS";
+    dom.ramNote.textContent = st.crtOn ? "内存自检 · " + (filled * 512) + " B OK" : "插座空置";
     var sweep = st.crtOn ? String((Math.floor(st.time * 40) % 0x4000)).padStart(4, "0") : "—";
     dom.ramTest.textContent = "$" + sweep;
 
-    dom.tapeNote.textContent = st.tapeProgress >= 1 ? "BASIC LOADED · CRUN" : (st.tapePlaying ? "READING · 1500 BAUD" : "STANDBY");
+    dom.tapeNote.textContent = st.tapeProgress >= 1 ? "BASIC 已载入 · CRUN" : (st.tapePlaying ? "读取中 · 1500 BAUD" : "待机");
     dom.tapePct.textContent = Math.round(st.tapeProgress * 100) + "%";
   }
 

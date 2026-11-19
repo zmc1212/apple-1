@@ -50,31 +50,31 @@
     }
 
     /* 1 · MOS 6502 CPU（DIP-40） */
-    def("cpu", "MOS 6502", "1.023 MHZ", [-0.35, 0.115, 0.1], 0.05, 0.12,
+    def("cpu", "6502 处理器", "MOS 6502 · 1.023 MHZ", [-0.35, 0.115, 0.1], 0.05, 0.12,
       function () { return dip(0.38, "MOS 6502", "MOS TECH © 1975", 20); }, 0);
 
     /* 2 · Signetics 2513 字符发生器（DIP-24） */
-    def("chargen", "2513 CHAR GEN", "5 x 7 UPPER", [-0.75, 0.115, 0.0], -0.1, 0.1,
+    def("chargen", "字符发生器 2513", "S2513 · 5 x 7 UPPER", [-0.75, 0.115, 0.0], -0.1, 0.1,
       function () { return dip(0.3, "S2513", "SIGNETICS", 12); }, 1);
 
     /* 2b · Woz Monitor PROM（256B） */
-    def("prom", "MONITOR PROM", "WOZ MONITOR · 256B", [-0.45, 0.115, -0.2], -0.04, 0.1,
+    def("prom", "监控 PROM", "WOZ MONITOR · 256B", [-0.45, 0.115, -0.2], -0.04, 0.1,
       function () { return dip(0.24, "PROM 256B", "WOZ MONITOR", 8); }, 1.5);
 
     /* 2c · MC6820 PIA（键盘 + 磁带 I/O，DIP-40） */
-    def("pia", "MC6820 PIA", "KEYBOARD + CASSETTE I/O", [-1.35, 0.115, -0.05], 0.03, 0.12,
+    def("pia", "外设接口 PIA", "MC6820 · KEYBOARD + CASSETTE I/O", [-1.35, 0.115, -0.05], 0.03, 0.12,
       function () { return dip(0.38, "MC6820", "PIA · I/O", 20); }, 1.3);
 
     /* 3-10 · 4K RAM ×8（MK4096 · 4KB，2×8 插座排的第 1 排） */
     var ramPos = [];
     for (var ri = 0; ri < 8; ri++) ramPos.push([-0.85 + ri * 0.225, 0.3]);
     ramPos.forEach(function (p, i) {
-      def("ram" + (i + 1), "4096 RAM", "MK 4096 · 4KBIT", [p[0], 0.115, p[1]], 0.02, 0.1,
+      def("ram" + (i + 1), "内存 4096", "MK 4096 · 4KBIT", [p[0], 0.115, p[1]], 0.02, 0.1,
         function () { return dip(0.2, "4096", "MK 4096", 8); }, i * 0.5);
     });
 
     /* 11 · 主晶振（14.31818 MHz，÷14 → 1.023 MHz CPU 时钟） */
-    def("xtal1", "CRYSTAL 14.31818", "MHZ · ÷14 → 1.023", [-0.1, 0.115, -0.35], 0.3, 0.1,
+    def("xtal1", "主晶振 14.31818", "14.31818 MHZ · ÷14 → 1.023", [-0.1, 0.115, -0.35], 0.3, 0.1,
       function () {
         var g = new THREE.Group();
         g.add(mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.09, 10), M.silver, 0, 0, 0).rotateX(Math.PI / 2));
@@ -82,7 +82,7 @@
       }, 3.0);
 
     /* 9 · 7805 + 散热片 */
-    def("reg", "7805 + SINK", "5V REGULATOR", [-1.0, 0.135, -0.35], 0, 0.24,
+    def("reg", "稳压 7805", "5V REGULATOR + HEAT SINK", [-1.0, 0.135, -0.35], 0, 0.24,
       function () {
         var g = new THREE.Group();
         g.add(mesh(new THREE.BoxGeometry(0.1, 0.1, 0.06), M.dark, 0, 0.05, 0));
@@ -93,7 +93,7 @@
       }, 0.3);
 
     /* 10 · 2N3055 TO-3 通过晶体管 */
-    def("to3", "2N3055 PASS", "TO-3 CAN", [-1.05, 0.115, -0.08], 0.15, 0.12,
+    def("to3", "调整管 2N3055", "2N3055 · TO-3 CAN", [-1.05, 0.115, -0.08], 0.15, 0.12,
       function () {
         var g = new THREE.Group();
         g.add(mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.04, 8), M.silver, 0, 0.02, 0));
@@ -102,7 +102,7 @@
       }, 0.8);
 
     /* 11 · RF 调制器盒 */
-    def("rfmod", "RF MODULATOR", "CH 3 · NTSC", [1.05, 0.135, -0.3], -0.08, 0.16,
+    def("rfmod", "RF 调制盒", "RF MODULATOR · CH 3 · NTSC", [1.05, 0.135, -0.3], -0.08, 0.16,
       function () {
         var g = new THREE.Group();
         g.add(mesh(new THREE.BoxGeometry(0.5, 0.17, 0.34), M.alu, 0, 0, 0));
@@ -111,7 +111,7 @@
       }, 0.5);
 
     /* 12 · 磁带机插孔对 */
-    def("jacks", "CASSETTE JACKS", "IN · OUT", [-1.05, 0.115, 0.38], 0.1, 0.1,
+    def("jacks", "磁带插孔", "CASSETTE · IN / OUT", [-1.05, 0.115, 0.38], 0.1, 0.1,
       function () {
         var g = new THREE.Group();
         for (var i = 0; i < 2; i++) {
@@ -122,7 +122,7 @@
       }, 0.3);
 
     /* 13 · 键盘连接器 */
-    def("kbd", "KEYBOARD HDR", "22 PIN", [-0.5, 0.115, -0.55], -0.05, 0.1,
+    def("kbd", "键盘连接器", "KEYBOARD HDR · 22 PIN", [-0.5, 0.115, -0.55], -0.05, 0.1,
       function () {
         var g = new THREE.Group();
         g.add(mesh(new THREE.BoxGeometry(0.5, 0.04, 0.1), M.plastic, 0, 0, 0));
@@ -133,7 +133,7 @@
       }, 0.8);
 
     /* 14 · 电解电容组 */
-    def("caps", "ELECTROLYTICS", "6.3V 1000uF", [1.6, 0.115, 0.5], 0.2, 0.12,
+    def("caps", "电解电容组", "ELECTROLYTIC · 6.3V · 1000uF", [1.6, 0.115, 0.5], 0.2, 0.12,
       function () {
         var g = new THREE.Group();
         for (var i = 0; i < 3; i++) {
@@ -145,7 +145,7 @@
       }, 1.3);
 
     /* 15 · 电阻排 */
-    def("res", "RESISTOR STRIP", "1/4W · 5%", [1.3, 0.112, 0.75], -0.3, 0.08,
+    def("res", "电阻排", "RESISTOR · 1/4W · 5%", [1.3, 0.112, 0.75], -0.3, 0.08,
       function () {
         var g = new THREE.Group();
         for (var i = 0; i < 4; i++) {
@@ -159,7 +159,7 @@
       }, 1.8);
 
     /* 16 · 螺丝盒 */
-    def("tray", "SCREWS", "4-40 · M2.5", [-2.35, 0.093, 1.9], -0.25, 0.16,
+    def("tray", "螺丝组", "SCREWS · 4-40 · M2.5", [-2.35, 0.093, 1.9], -0.25, 0.16,
       function () {
         var g = new THREE.Group();
         g.add(mesh(new THREE.CylinderGeometry(0.2, 0.16, 0.1, 20), M.plastic, 0, 0.05, 0));

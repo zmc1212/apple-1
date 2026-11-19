@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APPLE I · 1976 — 装配模拟</title>
+<title>苹果一号 APPLE I · 1976 — 装配模拟</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="src/styles.css">
 </head>
@@ -13,21 +13,21 @@
   <div id="frame-dashed"></div>
 
   <div id="card-title" class="card">
-    <div class="t1">APPLE&ensp;·&ensp;APPLE I&ensp;·&ensp;NTB BOARD</div>
-    <div class="t2">Fig. 03 — one 6502, 4K of RAM, and the board that sold for $666.66</div>
+    <div class="t1">苹果一号&ensp;·&ensp;APPLE I&ensp;·&ensp;NTB 主板</div>
+    <div class="t2">图 03 — 一颗 6502、4K 内存，和一块售价 666.66 美元的主板</div>
     <div class="t3">拖动旋转 · 滚轮缩放 · 点击零件看标签 · 空格暂停 · R 重播 · 数字键 1-8 跳阶段</div>
   </div>
 
   <div id="card-status" class="card">
-    <div class="k">MODE</div>
-    <div class="mode" id="st-mode">OFF</div>
-    <div class="row"><span class="k">CLK</span><b id="st-clk">—</b></div>
-    <div class="row"><span class="k">BUS</span><b id="st-bus">----</b></div>
-    <div class="row"><span class="k">PARTS</span><b id="st-parts">0 / 22</b></div>
+    <div class="k">模式 MODE</div>
+    <div class="mode" id="st-mode">关机 OFF</div>
+    <div class="row"><span class="k">时钟 CLK</span><b id="st-clk">—</b></div>
+    <div class="row"><span class="k">总线 BUS</span><b id="st-bus">----</b></div>
+    <div class="row"><span class="k">零件 PARTS</span><b id="st-parts">0 / 22</b></div>
   </div>
 
-  <div id="phase-pill"><i id="phase-dot"></i><span id="phase-text">STANDBY</span></div>
-  <div id="corner-left" class="corner">APPLE I · 1.023 MHZ · NTB</div>
+  <div id="phase-pill"><i id="phase-dot"></i><span id="phase-text">待机 STANDBY</span></div>
+  <div id="corner-left" class="corner">APPLE I 苹果一号 · 1.023 MHZ · NTB</div>
   <div id="corner-right" class="corner">STEVE W. · REV 0 · 1976</div>
 
   <div id="dash"></div>
@@ -67,5 +67,6 @@
   }, 6000);
 })();
 </script>
+  <script>if (new URLSearchParams(location.search).get("dash") === "0") document.body.classList.add("no-dash");</script>
 </body>
 </html>

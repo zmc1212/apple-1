@@ -1,42 +1,42 @@
 /* 时间线：核心 → RAM → 视频 → 电源 → 接线 → 上电 → Woz 监控 → BASIC → 归位 */
 (function (LS8) {
   var phases = [
-    { id: "core", name: "CORE · 6502", dur: 5.2, dot: "pink",
+    { id: "core", name: "核心芯片 · 6502", dur: 5.2, dot: "pink",
       cam: { theta: -0.62, phi: 0.96, r: 6.0, target: [0.05, 0.2, 0.1] }, drift: 0.04 },
-    { id: "ram", name: "RAM · 8 x 4KBIT", dur: 4.4, dot: "blue",
+    { id: "ram", name: "内存阵列 · 8 x 4KBIT", dur: 4.4, dot: "blue",
       cam: { theta: -1.4, phi: 0.95, r: 3.6, target: [0.05, 0.15, 0.42] }, drift: 0.015 },
-    { id: "video", name: "VIDEO · RF BOX", dur: 3.4, dot: "teal",
+    { id: "video", name: "视频输出 · RF BOX", dur: 3.4, dot: "teal",
       cam: { theta: -2.3, phi: 0.95, r: 3.6, target: [1.0, 0.15, -0.25] }, drift: 0.012 },
-    { id: "pwr", name: "POWER · 7805", dur: 3.4, dot: "green",
+    { id: "pwr", name: "电源稳压 · 7805", dur: 3.4, dot: "green",
       cam: { theta: -2.9, phi: 0.98, r: 3.4, target: [-0.95, 0.18, -0.2] }, drift: 0.012 },
-    { id: "io", name: "IO · KEYBOARD TAPE", dur: 3.2, dot: "teal",
+    { id: "io", name: "外设接入 · 键盘 + 磁带", dur: 3.2, dot: "teal",
       cam: { theta: -0.5, phi: 0.9, r: 4.2, target: [-0.7, 0.15, 0.2] }, drift: 0.015 },
-    { id: "power", name: "POWER ON · 5V", dur: 2.6, dot: "green",
+    { id: "power", name: "通电 · 5V", dur: 2.6, dot: "green",
       cam: { theta: -1.1, phi: 0.88, r: 3.4, target: [0.05, 0.15, 0.1] }, drift: 0.012 },
-    { id: "woz", name: "WOZ MONITOR", dur: 4.2, dot: "yellow",
+    { id: "woz", name: "Woz 监控 · WOZMON", dur: 4.2, dot: "yellow",
       cam: { theta: -1.6, phi: 1.02, r: 4.0, target: [0.05, 0.15, 0.1] }, drift: 0.01 },
-    { id: "basic", name: "BASIC · CRUN", dur: 5.0, dot: "pink",
+    { id: "basic", name: "BASIC 语言 · CRUN", dur: 5.0, dot: "pink",
       cam: { theta: -0.7, phi: 0.94, r: 5.2, target: [0.05, 0.15, 0.1] }, drift: 0.02 }
   ];
 
   var PINNED = {
     ram: function () {
       return [
-        { id: "p-r1", obj: LS8.Parts.group("ram1"), text: "MK4096 · 4KBIT" },
-        { id: "p-r8", obj: LS8.Parts.group("ram8"), text: "8 × 4KBIT = 4KB", tone: "white" }
+        { id: "p-r1", obj: LS8.Parts.group("ram1"), text: "内存芯片 4096", sub: "MK4096 · 4KBIT" },
+        { id: "p-r8", obj: LS8.Parts.group("ram8"), text: "8 颗 · 共 4 KB", sub: "8 × 4KBIT = 4KB", tone: "white" }
       ];
     },
     video: function () {
-      return [{ id: "p-rf", obj: LS8.Parts.group("rfmod"), text: "RF MOD · CH 3" }];
+      return [{ id: "p-rf", obj: LS8.Parts.group("rfmod"), text: "RF 调制盒", sub: "RF MOD · CH 3" }];
     },
     pwr: function () {
       return [
-        { id: "p-rg", obj: LS8.Parts.group("reg"), text: "7805 · 5V" },
-        { id: "p-t3", obj: LS8.Parts.group("to3"), text: "2N3055 PASS", tone: "white" }
+        { id: "p-rg", obj: LS8.Parts.group("reg"), text: "稳压 7805", sub: "7805 · 5V" },
+        { id: "p-t3", obj: LS8.Parts.group("to3"), text: "调整管 2N3055", sub: "2N3055 · PASS", tone: "white" }
       ];
     },
     woz: function () {
-      return [{ id: "p-cpu", obj: LS8.Parts.group("cpu"), text: "WOZ MONITOR · E000" }];
+      return [{ id: "p-cpu", obj: LS8.Parts.group("cpu"), text: "Woz 监控运行", sub: "WOZ MONITOR · E000" }];
     }
   };
 
@@ -166,7 +166,7 @@
     }
 
     /* DOM */
-    dom.mode.textContent = state.runChip ? "RUN" : (state.basicOn ? "BASIC" : (state.crtOn ? "WOZMON" : (state.power ? "READY" : "OFF")));
+    dom.mode.textContent = state.runChip ? "运行 RUN" : (state.basicOn ? "载入 BASIC" : (state.crtOn ? "监控 WOZMON" : (state.power ? "就绪 READY" : "关机 OFF")));
     dom.mode.className = "mode" + (state.runChip ? " lock" : "");
     dom.clk.textContent = state.power ? "1.023 MHZ" : "—";
     dom.bus.textContent = state.crtOn ? ("$" + state.regs.pc.toString(16).toUpperCase().padStart(4, "0")) : "----";
